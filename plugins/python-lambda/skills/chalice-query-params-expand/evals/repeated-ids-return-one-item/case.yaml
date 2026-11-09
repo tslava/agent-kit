@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: repeated-ids-return-one-item
+expected_outcome: |
+  The agent explains Chalice's MultiDict last-value-wins, adds one HTTP middleware that expands repeated and comma-separated params (scalar for one value, list for several, non-strings untouched), registers it, and adds tests for both list forms plus direct-invoke inputs.
+context:
+  scaffold_script: place-files.sh

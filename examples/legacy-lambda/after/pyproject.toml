@@ -1,0 +1,45 @@
+[project]
+name = "inventory-api"
+version = "0.1.0"
+description = "Fictional inventory Chalice Lambda"
+requires-python = ">=3.14"
+# Runtime deps bundled into the Lambda. Exported to src/requirements.txt.
+dependencies = [
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "sqlalchemy>=2.0",
+]
+
+[dependency-groups]
+dev = [
+    "chalice>=1.32",
+    "aws-cdk-lib>=2.250,<3",
+    "constructs>=10.4,<11",
+    "boto3>=1.40",
+    "pytest>=8.4",
+    "ruff>=0.17.2",
+    "isort>=9.0.2",
+]
+
+[tool.uv]
+exclude-newer = "15 days"
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 120
+src = ["src", "tests"]
+extend-exclude = ["out", "cdk.out"]
+
+[tool.ruff.lint]
+select = ["E", "F"]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+src_paths = ["src", "tests"]
+skip = ["out", "cdk.out", ".venv"]

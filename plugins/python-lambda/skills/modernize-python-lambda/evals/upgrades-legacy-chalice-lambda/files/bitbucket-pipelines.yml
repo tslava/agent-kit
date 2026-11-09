@@ -1,0 +1,21 @@
+image: python:3.9
+
+pipelines:
+  default:
+    - step:
+        name: Test
+        script:
+          - pip install pipenv
+          - pipenv install --dev --deploy
+          - PYTHONPATH=src pipenv run pytest tests
+  branches:
+    main:
+      - step:
+          name: Deploy
+          script:
+            - pip install pipenv
+            - pipenv install --dev --deploy
+            - curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
+            - npm install -g aws-cdk@1
+            - cd src; pipenv run chalice package ../out; cd -
+            - cdk deploy --require-approval never

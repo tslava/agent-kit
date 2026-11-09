@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: cooldown-across-poetry-and-uv-repos
+expected_outcome: |
+  The agent uses the bundled script on both repos, which adds [solver] min-release-age = 15 to billing/poetry.toml (keeping existing sections) and [tool.uv] exclude-newer = "15 days" to reports/pyproject.toml, and reports that lockfiles change only on the next lock.
+context:
+  scaffold_script: place-files.sh

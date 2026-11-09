@@ -1,0 +1,3 @@
+chalice
+pydantic>=2
+pytest

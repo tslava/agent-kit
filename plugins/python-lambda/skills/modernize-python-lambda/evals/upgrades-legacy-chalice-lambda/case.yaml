@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: upgrades-legacy-chalice-lambda
+expected_outcome: |
+  The agent surfaces the coupled scope (uv, pydantic v2, SQLAlchemy 2.0, aws-cdk v2, CI image) before changing code, then migrates the project step by step. At the end the tests pass on Python 3.14 under uv, the cooldown is set, and nothing was pushed.
+context:
+  scaffold_script: place-files.sh

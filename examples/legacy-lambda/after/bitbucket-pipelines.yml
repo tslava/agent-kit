@@ -1,0 +1,35 @@
+# Python 3.14 + uv. This public image has no Node, so Node 24 is installed in the deploy step only.
+image: ghcr.io/astral-sh/uv:python3.14-bookworm
+
+definitions:
+  steps:
+    - step: &lint
+        name: Lint
+        script:
+          - uv sync --locked
+          - uv run isort --check-only src tests
+          - uv run ruff check src tests
+
+pipelines:
+  default:
+    - step: *lint
+    - step:
+        name: Test
+        script:
+          - uv sync --locked
+          - uv run pytest
+  branches:
+    main:
+      - step: *lint
+      - step:
+          name: Test and deploy
+          deployment: Production
+          script:
+            - uv sync --locked
+            - uv run pytest
+            - curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && apt-get install -y nodejs
+            - npm install -g aws-cdk@2
+            - uv export --no-dev --no-hashes --no-emit-project -o src/requirements.txt
+            - cd src; uv run chalice package ../out; cd -
+            - cdk synth > /dev/null
+            - cdk deploy --require-approval never

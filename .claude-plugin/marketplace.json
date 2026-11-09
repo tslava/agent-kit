@@ -1,0 +1,16 @@
+{
+  "name": "agent-kit",
+  "metadata": {
+    "description": "Plugins for AI coding agents: skills, commands, agents and hooks distilled from real engineering work."
+  },
+  "owner": {
+    "name": "Wiaczeslaw Cyunczyk"
+  },
+  "plugins": [
+    {
+      "name": "python-lambda",
+      "source": "./plugins/python-lambda",
+      "description": "Modernize Python AWS Lambda services: Python 3.14, uv with a dependency cooldown, pydantic v2, SQLAlchemy 2.0, aws-cdk v2, and Chalice to FastAPI on Mangum."
+    }
+  ]
+}
