@@ -13,6 +13,11 @@
       "description": "Modernize Python AWS Lambda services: Python 3.14, uv with a dependency cooldown, pydantic v2, SQLAlchemy 2.0, aws-cdk v2, and Chalice to FastAPI on Mangum."
     },
     {
+      "name": "repo-audit",
+      "source": "./plugins/repo-audit",
+      "description": "Check a repository against its own code: README accuracy against the code, and a security review covering cloud IaC, CI/CD, supply chain and AI coding-agent configuration."
+    },
+    {
       "name": "planning",
       "source": "./plugins/planning",
       "description": "Write an implementation plan, review it, then execute it task by task with subagents and an external code review."

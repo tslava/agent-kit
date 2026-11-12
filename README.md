@@ -23,6 +23,13 @@ production.
 | [`dependency-cooldown`](plugins/python-lambda/skills/dependency-cooldown/SKILL.md) | Make the resolver ignore releases younger than N days (uv `exclude-newer`, Poetry `min-release-age`) |
 | [`fastapi-pydantic-patterns`](plugins/python-lambda/skills/fastapi-pydantic-patterns/SKILL.md) | Conventions for FastAPI + pydantic v2 endpoints, query models, validators and response envelopes |
 
+### `repo-audit`: check a repository against its own code
+
+| Skill | What it does |
+|---|---|
+| [`readme-refresh`](plugins/repo-audit/skills/readme-refresh/SKILL.md) | Audits a README against the code: wrong values, stale sections, missing env vars, jobs and commands. Reports what it could not verify instead of guessing |
+| [`security-audit`](plugins/repo-audit/skills/security-audit/SKILL.md) | Whole-repo security review with a threat model. Every Critical/High finding must survive an attempt to disprove it. Checklists for AWS serverless, CI/CD and supply chain, and AI coding-agent configuration (`.claude/`, `.mcp.json`, hooks, agents run without a sandbox) |
+
 ### Workflow plugins
 
 The planning and review loop I use for non-trivial changes.
@@ -40,6 +47,7 @@ In Claude Code:
 ```bash
 /plugin marketplace add tslava/agent-kit
 /plugin install python-lambda@agent-kit
+/plugin install repo-audit@agent-kit
 /plugin install planning@agent-kit
 /plugin install brainstorm@agent-kit
 /plugin install thinking-tools@agent-kit
