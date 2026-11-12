@@ -1,7 +1,7 @@
 # agent-kit
 
-Plugins for AI coding agents: skills, and later commands, agents and hooks, that come out
-of real engineering work. Each plugin covers one topic. The skills are plain `SKILL.md`
+Plugins for AI coding agents: skills, commands, agents and hooks that come out of real
+engineering work. Each plugin covers one topic. The skills are plain `SKILL.md`
 files, so they work in Claude Code and in other agents that read the
 [Agent Skills](https://agentskills.io) format.
 
@@ -23,6 +23,16 @@ production.
 | [`dependency-cooldown`](plugins/python-lambda/skills/dependency-cooldown/SKILL.md) | Make the resolver ignore releases younger than N days (uv `exclude-newer`, Poetry `min-release-age`) |
 | [`fastapi-pydantic-patterns`](plugins/python-lambda/skills/fastapi-pydantic-patterns/SKILL.md) | Conventions for FastAPI + pydantic v2 endpoints, query models, validators and response envelopes |
 
+### Workflow plugins
+
+The planning and review loop I use for non-trivial changes.
+
+| Plugin | What it does |
+|---|---|
+| [`planning`](plugins/planning/) | `/planning:make` writes an implementation plan and gets it reviewed; `planning:exec` runs it task by task with subagents, internal review and an external code review |
+| [`brainstorm`](plugins/brainstorm/) | A design dialogue before any significant change: one question at a time, approaches, design, then a plan |
+| [`thinking-tools`](plugins/thinking-tools/) | `ask-codex` for a second opinion from OpenAI Codex, dialectic analysis, root-cause investigation |
+
 ## Install
 
 In Claude Code:
@@ -30,7 +40,13 @@ In Claude Code:
 ```bash
 /plugin marketplace add tslava/agent-kit
 /plugin install python-lambda@agent-kit
+/plugin install planning@agent-kit
+/plugin install brainstorm@agent-kit
+/plugin install thinking-tools@agent-kit
 ```
+
+If another installed plugin is already called `planning`, `brainstorm` or `thinking-tools`,
+uninstall it first: both would register the same skill names.
 
 Then just describe the job, e.g. "move this Lambda to Python 3.14" or "get this API off
 Chalice". The matching skill loads on its own.
@@ -92,7 +108,7 @@ The skill carries a dozen more like this: the 20 KB Lambda resource-policy limit
 which makes enumerated API Gateway routes fail to deploy; cold-start timeouts at 128 MB;
 a Lambda outside the VPC that serves `/docs` but returns 502 on every DB route.
 
-## How the skills are written
+## How the python-lambda skills are written
 
 - **Orchestrator + focused skills.** One skill owns the order of operations and links to
   narrow skills for each domain, so each stays short enough to follow.
@@ -105,6 +121,16 @@ a Lambda outside the VPC that serves `/docs` but returns 502 on every DB route.
 
 More in [docs/how-these-are-written.md](docs/how-these-are-written.md).
 
+## Other tools I use
+
+Not in this repo, but part of the same workflow:
+
+- [Plannotator](https://github.com/backnotprop/plannotator): review and annotate plans and
+  diffs in the browser, and send the annotations back to the agent.
+- From Anthropic's [official plugins](https://github.com/anthropics/claude-plugins-official):
+  `skill-creator` (writing skills and their evals, the format the evals here follow),
+  `frontend-design` and `playground`.
+
 ## Repository layout
 
 ```
@@ -112,6 +138,8 @@ More in [docs/how-these-are-written.md](docs/how-these-are-written.md).
 plugins/<plugin>/                 # one plugin per topic
   .claude-plugin/plugin.json
   skills/<skill>/SKILL.md (+ references/, scripts/)
+  commands/, agents/, hooks/        # where a plugin has them
+  LICENSE                           # where a plugin has its own license
 examples/                         # synthetic fixtures and run logs
 scripts/lint_skills.py            # frontmatter, links, hygiene checks
 tests/                            # tests for bundled scripts
@@ -121,7 +149,7 @@ CI runs the linter, the script tests and a secret scan on pushes to `main` and o
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). A plugin folder with its own `LICENSE` file is covered by that file.
 
 ---
 

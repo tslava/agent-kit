@@ -11,6 +11,21 @@
       "name": "python-lambda",
       "source": "./plugins/python-lambda",
       "description": "Modernize Python AWS Lambda services: Python 3.14, uv with a dependency cooldown, pydantic v2, SQLAlchemy 2.0, aws-cdk v2, and Chalice to FastAPI on Mangum."
+    },
+    {
+      "name": "planning",
+      "source": "./plugins/planning",
+      "description": "Write an implementation plan, review it, then execute it task by task with subagents and an external code review."
+    },
+    {
+      "name": "brainstorm",
+      "source": "./plugins/brainstorm",
+      "description": "Collaborative design dialogue: from an idea to approaches, a design and a plan."
+    },
+    {
+      "name": "thinking-tools",
+      "source": "./plugins/thinking-tools",
+      "description": "Second opinions and analysis: ask Codex, dialectic analysis, root-cause investigation."
     }
   ]
 }
