@@ -98,6 +98,10 @@ Document the fundamental issue requiring attention:
 5. **Think systemically** - consider broader implications
 6. **Question assumptions** - challenge "it should work" thinking
 7. **Use version control** - check when issue was introduced
+8. **Check it yourself before asking** - logs, git history, the database, the running system, the ticket tracker. Ask the user only for what you have no access to, and say what you already checked
+9. **Prove the scope before you generalize** - before saying "everything is broken" or "every run fails", compare run timestamps with the change and check more than one case
+10. **Live data beats fixtures** - before building a theory on what a field or an upstream service sends, confirm it in real logs or real responses, not in test fixtures or input models
+11. **Label what is unverified** - every claim in the report is either backed by evidence you cite or marked as a hypothesis with the check that would confirm it
 
 ## Using Reference Materials
 

@@ -29,12 +29,15 @@ USER_RULES
 
 STEP 1 - IMPLEMENT:
 - Read the plan's Overview and Context sections to understand the work
+- Before editing, check the current state of the files this task touches and `git log` since the plan was written: another session may already have done part of it. Don't redo what is already there; mark it [x] and log a [deviation] saying so
 - Implement ALL items in the current Task section (all [ ] checkboxes under it)
+- Make the smallest change that does it: no new dependencies, files, settings or abstractions the Task section doesn't require. If you add one anyway, log it as a [decision] with the reason
 - Write tests for the implementation
 
 STEP 2 - VALIDATE:
 - Run the test and lint commands specified in the plan (e.g., "cargo test", "go test ./...", etc.)
 - Fix any failures, repeat until all validation passes
+- If the task changes something a person runs or sees (a UI, a CLI command, an HTTP endpoint) and the project can be started locally, start it and exercise the change the way a user would; record what you observed in the progress log. Passing tests are not proof that a screen renders or a link opens. Stay local and harmless: local servers, local or test data, read-only requests where possible; never call production or external services, and never run actions that delete data or send anything outside the local environment. If it can't be exercised safely here, log a [deviation]: "not exercised end-to-end — <why>"
 
 STEP 3 - COMPLETE (after validation passes):
 - Edit PLAN_FILE_PATH and change [ ] to [x] for each checkbox you implemented in the current Task section

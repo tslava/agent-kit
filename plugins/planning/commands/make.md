@@ -72,6 +72,8 @@ before asking questions, understand what the user is working on:
    - which files/areas are relevant to the request
    - key patterns or conventions observed
 
+4. **note what the plan will rest on.** if the plan depends on a fact about data or a running system (a field an upstream service sends, a value in production config, how the team delivers changes: PR or direct push, how migrations are applied), write it down as an assumption to confirm. confirm it against live sources you can reach (logs, real responses, CLAUDE.md, project memory, git history) before step 2, not against test fixtures or input models. what you can't confirm goes into the plan's Context section as an open assumption, not as a fact.
+
 ## step 1: present context and ask focused questions
 
 show the discovered context, then ask questions **one at a time** using the AskUserQuestion tool:
@@ -414,5 +416,7 @@ this ensures each task is solid before building on top of it.
 - **multiple choice preferred** - easier to answer than open-ended when possible
 - **DRY, YAGNI ruthlessly** - avoid unnecessary duplication and features, keep scope minimal (but prefer duplication over premature abstraction when it reduces coupling)
 - **lead with recommendation** - have an opinion, explain why, but let user decide
+- **smallest change that solves it** - no new dependencies, files, settings, notifications or hardening the request doesn't need. every addition in the plan must answer "what breaks without it?", especially when the current code already works
+- **don't re-plan approved work** - once the user has approved the approach and given the inputs, write the plan; don't reopen settled questions
 - **explore alternatives** - always propose 2-3 approaches before settling (unless obvious)
 - **duplication vs abstraction** - when code repeats, ask user: prefer duplication (simpler, no coupling) or abstraction (DRY but adds complexity)? explain trade-offs before deciding

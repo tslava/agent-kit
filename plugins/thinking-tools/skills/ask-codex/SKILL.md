@@ -162,33 +162,53 @@ Use "approve" only if you cannot support any substantive finding.
 
 ### Step 4: Execute Codex
 
-Run codex in background (it takes 2-5 minutes for complex analysis):
+Run codex in background (it takes 2-5 minutes for complex analysis), with its output in a log file:
 
 ```bash
 codex exec ${CODEX_MODEL:+--model=$CODEX_MODEL} \
   --sandbox read-only \
-  -c model_reasoning_effort="xhigh" \
+  -c approval_policy='"never"' \
+  -c model_reasoning_effort="${CODEX_EFFORT:-high}" \
   -c stream_idle_timeout_ms=600000 \
-  "prompt here" < /dev/null
+  "prompt here" < /dev/null > codex-review.log 2>&1
 ```
 
 **Execution rules:**
 - Always end the invocation with `< /dev/null` (as shown). `codex exec` reads stdin to append a `<stdin>` block even when the prompt is a positional arg, so an inherited open pipe (common under a background launch) never closes and codex blocks forever on "Reading additional input from stdin…"; `/dev/null` gives immediate EOF.
-- Always use `run_in_background: true` in Bash tool
-- Monitor with BashOutput every 15-20 seconds
-- Be patient during reasoning phase (1-3 minutes of silence is normal)
+- Always use `run_in_background: true` in Bash tool, and wait for its completion notification instead of polling.
+- **Liveness check after ~60 seconds.** The log must be growing and show at least one shell command that succeeded (`succeeded in`). If it is stuck, dead, or every command is rejected, fix the invocation and relaunch right away. Don't wait for a run that will never finish.
+- Be patient during reasoning phase (1-3 minutes of silence is normal once the liveness check passed)
 - Total timeout: 10 minutes for standard, 15 for complex
+- Outside a git repository add `--skip-git-repo-check`, or codex exits at once with "Not inside a trusted directory".
 
 **Flags:**
 - `--sandbox read-only` — codex can read all project files but cannot modify anything
+- `-c approval_policy='"never"'` — pass it explicitly. `codex exec` defaults to `never`, but settings from `~/.codex/config.toml` can override that default, for example a directory marked `trust_level = "untrusted"`. Then exec runs with an approval policy it can't satisfy non-interactively: every shell command is rejected ("approval is not supported in exec mode"), and the model goes looking for other tools to get its work done.
 - `${CODEX_MODEL:+--model=$CODEX_MODEL}` — the model comes from the user's `~/.codex/config.toml`; it is overridden only when `CODEX_MODEL` is set. Keep this expansion unquoted so it disappears when the variable is unset
-- `model_reasoning_effort="xhigh"` — deepest reasoning tier
+- `model_reasoning_effort` — `high` by default; set `CODEX_EFFORT=xhigh` for the deepest tier when the question justifies the cost
 
-### Step 5: Present Results
+**Disable GUI and browser tools.** If the user's `~/.codex/config.toml` enables MCP servers or plugins that control the desktop, a browser or other terminals, turn each one off for the run with `-c mcp_servers.<name>.enabled=false`. A review job needs the shell and the files, nothing else. When its shell is blocked, a model that still has desktop-control tools will use them, for example to type commands into the user's other terminal windows.
+
+**After the run:** search the log for the names of those tools (e.g. `grep -c <tool-name> codex-review.log`). The count must be 0. A non-zero count can also come from a file Codex read that mentions the tool, so inspect the matches before reporting an incident. If Codex really used them, or the shell stayed unavailable, stop and tell the user. Don't retry with the same setup.
+
+### Step 5: Settle disagreements with Codex first
+
+Where your assessment disagrees with a finding, settle it with Codex before you present anything to the user. Don't accept a verdict silently, and don't start a fresh `codex exec` to argue with it: a new session has lost the context. Continue the same session:
+
+- Take the session id from the first run's log (`session id: <uuid>`). Never use `--last`: other Codex sessions may be running.
+- `codex exec resume <session-id> "<reply>" < /dev/null` with the same flags. `resume` has no `--sandbox` option, so pass `-c sandbox_mode='"read-only"'` and check that the log header says `sandbox: read-only`.
+- At most 3 rounds after the initial review (a round = your reply + Codex's answer). Send only the disputed points, batched in one message.
+- Every reply must bring new evidence: `file:line`, a log line, a query result, a documentation quote. Restating your position is not a round. If a round brings nothing new from either side, stop.
+- Concede a point as soon as Codex's evidence beats yours. The goal is the right answer, not winning.
+- Report each disputed point as: accepted / Codex withdrew / I withdrew / unresolved. For an unresolved one, give both positions with their evidence in one or two lines each; the user decides.
+
+A plain review whose findings you accept needs no debate.
+
+### Step 6: Present Results
 
 1. **Extract codex's analysis** — skip session info, token counts, prompt echo
 2. **Parse structured output** — for reviews, codex returns JSON; parse and present as structured findings
-3. **Add your assessment** — agree, disagree, or note caveats
+3. **Add your assessment** — agree, disagree, or note caveats; for points debated in Step 5, give the outcome (accepted / Codex withdrew / I withdrew / unresolved)
 4. **STOP and ask** — do NOT apply any fixes or changes without explicit user approval
 
 **For investigation/debug responses** (unstructured):
@@ -241,7 +261,8 @@ Parse the JSON output and present findings sorted by severity, filtered by confi
 - **Read-only always** — codex analyzes, we implement. Never let codex edit files.
 - **Don't duplicate files** — codex has full project access. Provide paths, not content.
 - **Focused prompts** — specific questions get better answers than broad "review everything".
-- **Background execution** — always run in background to avoid timeout issues.
+- **Background execution** — always run in background to avoid timeout issues, and confirm it really started (liveness check) before waiting on it.
+- **Locked down** — read-only sandbox, `approval_policy="never"`, GUI and browser tools off. A run that can't use the shell must fail, not improvise.
 - **One question at a time** — if multiple concerns, run separate codex queries.
 - **Critical thinking** — codex can be wrong. Evaluate its suggestions before implementing.
 
@@ -258,3 +279,5 @@ Parse the JSON output and present findings sorted by severity, filtered by confi
 - **Timeout**: increase `stream_idle_timeout_ms` for complex analyses
 - **Off-target response**: refine prompt with more specific file:line references
 - **Hangs on "Reading additional input from stdin…"**: the invocation is missing the `< /dev/null` stdin redirect — add it (see Step 4).
+- **Every command "rejected" / "approval is not supported in exec mode"**: an interactive approval policy reached exec (check `approval_policy` and the directory's `trust_level` in `~/.codex/config.toml`). Stop the run, pass `-c approval_policy='"never"'`, relaunch.
+- **"Not inside a trusted directory"**: running outside a git repository; add `--skip-git-repo-check`.

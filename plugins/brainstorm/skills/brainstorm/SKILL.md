@@ -44,6 +44,12 @@ Check project context first, then ask questions one at a time:
 
 Do not overwhelm with multiple questions. One question per message. If a topic needs more exploration, break it into multiple questions.
 
+**Look it up before you ask.** Ask only what the code, config, docs, git history, CLAUDE.md and project memory can't answer. That includes how the team works: whether changes go through PRs or straight to the main branch, how migrations are applied, which directory is the real project. If a question rests on an assumption, name it in the question.
+
+**Every question carries a recommendation.** Put the option you'd pick first, with one line of plain-language reason and what it changes. If the user hands the choice back ("which is better?"), decide and say why.
+
+**Nothing changes during a brainstorm.** Phases 1–3 happen in the conversation: no file edits, no commits, no requests that change state (deploys, POSTs, pushes). Files get written only after the user picks a next step in Phase 4. If the user said "let's discuss first", wait for an explicit go even then.
+
 ### Phase 2: Explore Approaches
 
 Once the problem is understood:
@@ -51,6 +57,7 @@ Once the problem is understood:
 1. **Propose 2-3 different approaches** with trade-offs
 2. **Lead with recommended option** and explain reasoning
 3. **Present conversationally** - not a formal document yet
+4. **Start with the smallest version that works** - defer extra modes, settings and special cases to a later stage, and say what would trigger adding them
 
 Example format:
 ```
@@ -112,6 +119,8 @@ After design is validated, use AskUserQuestion tool:
 - **Incremental validation** - present design in sections, validate each
 - **Be flexible** - go back and clarify when something doesn't make sense
 - **Lead with recommendation** - have an opinion, explain why, but let user decide
+- **Plain words** - no internal names or jargon the user has to decode; when you ask for a decision, say in one sentence why it matters
+- **No unsolicited extras** - don't end messages with offers of work nobody asked for (extra reviews, tracking, polish)
 - **Duplication vs abstraction** - when code repeats, ask user: prefer duplication (simpler, no coupling) or abstraction (DRY but adds complexity)? explain trade-offs before deciding
 
 ## Task Tracking
