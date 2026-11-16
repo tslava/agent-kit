@@ -4,6 +4,18 @@ A skill for AI coding agents. It writes or rewrites a technical document so that
 
 Use it for the document that is complete and still impossible to build from. One component has three names. A table cell holds a paragraph. The text gives two values for one timeout, and nobody sees it.
 
+## When to use it
+
+- An LLM wrote the document: it is long, and it states guesses as facts.
+- A consultant sent a document, and you cannot judge the work.
+- You must split a spec into tasks for several developers.
+- An agent will read the document: a prompt, a brief, an `AGENTS.md` file.
+- A mistake in the procedure is expensive: a runbook, a migration.
+
+## What it costs and what it saves
+
+The writer pays one time: 1.6 times the tokens in the test below. Each reader saves after that, because nobody stops at an unclear name or builds from a value that the author never gave. We measured the cause, not the saving: 7 invented values without the skill, none with it.
+
 ## What it does
 
 The skill has four parts.
