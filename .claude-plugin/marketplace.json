@@ -18,6 +18,11 @@
       "description": "Check a repository against its own code: README accuracy against the code, and a security review covering cloud IaC, CI/CD, supply chain and AI coding-agent configuration."
     },
     {
+      "name": "tech-writing",
+      "source": "./plugins/tech-writing",
+      "description": "Write technical documents that a reader can act on: controlled plain English, a glossary the linter enforces, and a reader test with a fresh agent."
+    },
+    {
       "name": "planning",
       "source": "./plugins/planning",
       "description": "Write an implementation plan, review it, then execute it task by task with subagents and an external code review."

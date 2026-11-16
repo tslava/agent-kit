@@ -1,0 +1,13 @@
+{
+  "name": "tech-writing",
+  "version": "0.1.0",
+  "description": "Write technical documents that a reader can act on: controlled plain English, a glossary the linter enforces, and a reader test with a fresh agent.",
+  "author": {
+    "name": "Wiaczeslaw Cyunczyk",
+    "url": "https://tslava.github.io/"
+  },
+  "homepage": "https://github.com/tslava/agent-kit",
+  "repository": "https://github.com/tslava/agent-kit",
+  "license": "MIT",
+  "keywords": ["documentation", "technical-writing", "plain-english", "simplified-technical-english", "linter", "glossary"]
+}

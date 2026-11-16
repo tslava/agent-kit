@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: rewrite-dense-spec
+expected_outcome: |
+  The agent states the reader and the job, writes a glossary that gives the irrigation node and the hub one name each with the other names banned, rewrites the section as numbered command-form steps and short description, keeps every number and identifier, reports the 30 vs 45 minute download limit as an open question instead of choosing, runs plain_lint.py until it reports no errors, and runs a reader test with a fresh agent that gets only the document.
+context:
+  scaffold_script: place-files.sh

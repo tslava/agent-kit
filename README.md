@@ -30,6 +30,25 @@ production.
 | [`readme-refresh`](plugins/repo-audit/skills/readme-refresh/SKILL.md) | Audits a README against the code: wrong values, stale sections, missing env vars, jobs and commands. Reports what it could not verify instead of guessing |
 | [`security-audit`](plugins/repo-audit/skills/security-audit/SKILL.md) | Whole-repo security review with a threat model. Every Critical/High finding must survive an attempt to disprove it. Checklists for AWS serverless, CI/CD and supply chain, and AI coding-agent configuration (`.claude/`, `.mcp.json`, hooks, agents run without a sandbox) |
 
+### `tech-writing`: documents a reader can act on
+
+For the document that is correct and still impossible to build from: 100-word table cells,
+three names for one component, the actor hidden in the passive voice.
+
+| Skill | What it does |
+|---|---|
+| [`plain-docs`](plugins/tech-writing/skills/plain-docs/SKILL.md) | Writes or rewrites a spec, work plan or runbook in controlled plain English (rules in the spirit of ASD-STE100). Builds a glossary first, lints the text with a bundled script, then gives the document to a fresh agent with no context and compares its answers with a key written beforehand |
+
+The linter reads the glossary, so the names a reader learns are the names the script enforces:
+a banned synonym is an error, and a numbered step must start with a verb from the list.
+A second script compares every number and identifier of a source with its rewrite, in both
+directions: what was lost and what was invented.
+
+On the [dense-spec example](examples/dense-spec/RUN-LOG.md) a fresh reader answered 10 of 10
+questions on the rewrite with the skill and on the one without it. The difference was elsewhere:
+without the skill the agent filled seven gaps of the source with its own values in the body
+text, and with the skill each gap became an open question for the author.
+
 ### Workflow plugins
 
 The planning and review loop I use for non-trivial changes.
@@ -48,6 +67,7 @@ In Claude Code:
 /plugin marketplace add tslava/agent-kit
 /plugin install python-lambda@agent-kit
 /plugin install repo-audit@agent-kit
+/plugin install tech-writing@agent-kit
 /plugin install planning@agent-kit
 /plugin install brainstorm@agent-kit
 /plugin install thinking-tools@agent-kit
