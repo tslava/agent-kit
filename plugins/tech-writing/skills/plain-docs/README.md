@@ -6,15 +6,11 @@ Use it for the document that is complete and still impossible to build from. One
 
 ## When to use it
 
-- An LLM wrote the document: it is long, and it states guesses as facts.
-- A consultant sent a document, and you cannot judge the work.
-- You must split a spec into tasks for several developers.
-- An agent will read the document: a prompt, a brief, an `AGENTS.md` file.
-- A mistake in the procedure is expensive: a runbook, a migration.
-
-## What it costs and what it saves
-
-The writer pays one time: 1.6 times the tokens in the test below. Each reader saves after that, because nobody stops at an unclear name or builds from a value that the author never gave. We measured the cause, not the saving: 7 invented values without the skill, none with it.
+- Your LLM produces documents that are hard to read.
+- A consultant sent you a design and you can't tell whether the work is good.
+- You have to split a spec into tasks for several developers.
+- The document is for another agent: a prompt, a brief, an `AGENTS.md`.
+- It's a procedure where a mistake is expensive: a runbook, a migration.
 
 ## What it does
 
