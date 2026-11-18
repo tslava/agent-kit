@@ -22,6 +22,17 @@ vcs=$(bash "$SCRIPT_DIR/detect-vcs.sh")
 args=("exec")
 [ "$vcs" = "hg" ] && args+=("--skip-git-repo-check")
 args+=("--sandbox" "read-only")
+# safety controls, always on (also with CODEX_NO_OVERRIDES=1):
+# - approval_policy never: a directory marked untrusted in ~/.codex/config.toml would
+#   otherwise turn approvals on, and in exec mode every shell command is then rejected;
+# - features.plugins=false: bundled Codex plugins bring computer-use tools that can click
+#   and type into other apps. A review needs the shell and the files only.
+args+=("-c" 'approval_policy="never"' "-c" "features.plugins=false")
+# MCP servers from the user's own config that control the desktop or a browser:
+# CODEX_DISABLE_MCP="name1 name2". Only list servers that exist, codex refuses unknown names.
+for server in ${CODEX_DISABLE_MCP:-}; do
+    args+=("-c" "mcp_servers.${server}.enabled=false")
+done
 
 # -c overrides switch provider routing in a way some corporate codex
 # proxies / wrappers reject (e.g. "Error: Model provider 'responses' not

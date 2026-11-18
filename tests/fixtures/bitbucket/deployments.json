@@ -1,0 +1,8 @@
+{
+  "pagelen": 20,
+  "values": [
+    {"state": {"name": "COMPLETED", "status": {"name": "FAILED"}}, "release": {"name": "#412", "commit": {"hash": "{{FAILED}}"}}},
+    {"state": {"name": "COMPLETED", "status": {"name": "SUCCESSFUL"}}, "release": {"name": "#411", "commit": {"hash": "{{DEPLOYED}}"}}},
+    {"state": {"name": "COMPLETED", "status": {"name": "SUCCESSFUL"}}, "release": {"name": "#405", "commit": {"hash": "{{OLDER}}"}}}
+  ]
+}

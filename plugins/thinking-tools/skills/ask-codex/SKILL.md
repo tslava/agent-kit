@@ -168,6 +168,7 @@ Run codex in background (it takes 2-5 minutes for complex analysis), with its ou
 codex exec ${CODEX_MODEL:+--model=$CODEX_MODEL} \
   --sandbox read-only \
   -c approval_policy='"never"' \
+  -c features.plugins=false \
   -c model_reasoning_effort="${CODEX_EFFORT:-high}" \
   -c stream_idle_timeout_ms=600000 \
   "prompt here" < /dev/null > codex-review.log 2>&1
@@ -187,7 +188,9 @@ codex exec ${CODEX_MODEL:+--model=$CODEX_MODEL} \
 - `${CODEX_MODEL:+--model=$CODEX_MODEL}` — the model comes from the user's `~/.codex/config.toml`; it is overridden only when `CODEX_MODEL` is set. Keep this expansion unquoted so it disappears when the variable is unset
 - `model_reasoning_effort` — `high` by default; set `CODEX_EFFORT=xhigh` for the deepest tier when the question justifies the cost
 
-**Disable GUI and browser tools.** If the user's `~/.codex/config.toml` enables MCP servers or plugins that control the desktop, a browser or other terminals, turn each one off for the run with `-c mcp_servers.<name>.enabled=false`. A review job needs the shell and the files, nothing else. When its shell is blocked, a model that still has desktop-control tools will use them, for example to type commands into the user's other terminal windows.
+- `-c features.plugins=false` — bundled Codex plugins add MCP servers of their own, including computer-use tools that click and type into other apps. They do not appear in `config.toml`, and `-c mcp_servers.<name>.enabled=false` cannot reach them; this switch removes them. Check with `codex mcp list --json -c features.plugins=false`.
+
+**Disable GUI and browser tools.** If the user's `~/.codex/config.toml` itself defines MCP servers that control the desktop, a browser or other terminals, turn each one off for the run with `-c mcp_servers.<name>.enabled=false`. Only name servers that exist: for an unknown name Codex refuses to start ("invalid transport"). A review job needs the shell and the files, nothing else. When its shell is blocked, a model that still has desktop-control tools will use them, for example to type commands into the user's other terminal windows.
 
 **After the run:** search the log for the names of those tools (e.g. `grep -c <tool-name> codex-review.log`). The count must be 0. A non-zero count can also come from a file Codex read that mentions the tool, so inspect the matches before reporting an incident. If Codex really used them, or the shell stayed unavailable, stop and tell the user. Don't retry with the same setup.
 

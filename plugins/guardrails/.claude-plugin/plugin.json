@@ -1,0 +1,13 @@
+{
+  "name": "guardrails",
+  "description": "PreToolUse hooks that turn agent rules into checks: codex-guard, destructive-guard, deploy-guard. Each one documents what it does not catch.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Wiaczeslaw Cyunczyk",
+    "url": "https://tslava.github.io/"
+  },
+  "homepage": "https://github.com/tslava/agent-kit",
+  "repository": "https://github.com/tslava/agent-kit",
+  "license": "MIT",
+  "keywords": ["hooks", "guardrails", "safety", "codex", "git", "deploy"]
+}

@@ -49,6 +49,17 @@ questions on the rewrite with the skill and on the one without it. The differenc
 without the skill the agent filled seven gaps of the source with its own values in the body
 text, and with the skill each gap became an open question for the author.
 
+### `guardrails`: hooks that turn agent rules into checks
+
+A `PreToolUse` hook on the Bash tool. Each guard says what it does not catch, and tests
+keep that list honest. Background: [Keeping AI coding agents inside the lines](docs/enforcement.md).
+
+| Guard | What it stops |
+|---|---|
+| `codex-guard` | `codex exec` without a read-only sandbox, `approval_policy="never"`, Codex plugins off and stdin closed. The deny reason contains the fixed command |
+| `destructive-guard` | Recursive deletes outside temp dirs, `find -delete`, `git reset --hard`, `git clean -f`, discarding checkouts, force pushes (`--force-with-lease` passes) |
+| `deploy-guard` | A push that would redeploy a shared environment without the commit deployed there now (Bitbucket deployments) |
+
 ### Workflow plugins
 
 The planning and review loop I use for non-trivial changes.
@@ -68,6 +79,7 @@ In Claude Code:
 /plugin install python-lambda@agent-kit
 /plugin install repo-audit@agent-kit
 /plugin install tech-writing@agent-kit
+/plugin install guardrails@agent-kit
 /plugin install planning@agent-kit
 /plugin install brainstorm@agent-kit
 /plugin install thinking-tools@agent-kit
@@ -170,10 +182,11 @@ plugins/<plugin>/                 # one plugin per topic
   LICENSE                           # where a plugin has its own license
 examples/                         # synthetic fixtures and run logs
 scripts/lint_skills.py            # frontmatter, links, hygiene checks
-tests/                            # tests for bundled scripts
+docs/                             # how the skills are written; agent enforcement levels
+tests/                            # tests for bundled scripts and hooks
 ```
 
-CI runs the linter, the script tests and a secret scan on pushes to `main` and on pull requests.
+CI runs the linter, the script and hook tests and a secret scan on pushes to `main` and on pull requests.
 
 ## License
 

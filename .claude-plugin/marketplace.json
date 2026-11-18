@@ -23,6 +23,11 @@
       "description": "Write technical documents that a reader can act on: controlled plain English, a glossary the linter enforces, and a reader test with a fresh agent."
     },
     {
+      "name": "guardrails",
+      "source": "./plugins/guardrails",
+      "description": "PreToolUse hooks that turn agent rules into checks: codex-guard (safe Codex launches), destructive-guard (deletes, hard resets, force pushes), deploy-guard (don't overwrite what is deployed on a shared environment). Known gaps are documented and tested."
+    },
+    {
       "name": "planning",
       "source": "./plugins/planning",
       "description": "Write an implementation plan, review it, then execute it task by task with subagents and an external code review."
